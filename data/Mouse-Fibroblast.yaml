@@ -1,0 +1,53 @@
+project: Smartseq3_Mouse-Fibroblast
+sequence_files:
+  file1:
+    name: /datadisk1/qqz5133/nf-merge/link-test/data/Smartseq3.Fibroblasts.GelCut.R1.fastq.gz
+    base_definition:
+      - cDNA(23-150)
+      - UMI(12-19)
+    find_pattern: ATTGCGCAATG
+  file2:
+    name: /datadisk1/qqz5133/nf-merge/link-test/data/Smartseq3.Fibroblasts.GelCut.R2.fastq.gz
+    base_definition:
+      - cDNA(1-150)
+  file3:
+    name: /datadisk1/qqz5133/nf-merge/link-test/data/Smartseq3.Fibroblasts.GelCut.I1.fastq.gz
+    base_definition:
+      - BC(1-8)
+  file4:
+    name: /datadisk1/qqz5133/nf-merge/link-test/data/Smartseq3.Fibroblasts.GelCut.I2.fastq.gz
+    base_definition:
+      - BC(1-8)
+reference:
+  STAR_index: /datadisk1/qqz5133/nf-merge/link-test/data/mouse/mouse_index/
+  GTF_file: /datadisk1/qqz5133/nf-merge/link-test/data/mouse/Mus_musculus.GRCm39.109.gtf
+  additional_STAR_params: '--limitSjdbInsertNsj 2000000 --outSAMstrandField intronMotif --outFilterIntronMotifs RemoveNoncanonicalUnannotated --clip3pAdapterSeq CTGTCTCTTATACACATCT'
+  additional_files:
+out_dir: /datadisk1/qqz5133/nf-merge/link-test/data/Mouse-Fibroblast/
+num_threads: 50
+mem_limit: 100
+filter_cutoffs:
+  BC_filter:
+    num_bases: 3
+    phred: 20
+  UMI_filter:
+    num_bases: 3
+    phred: 20
+barcodes:
+  barcode_num: ~
+  barcode_file: /datadisk1/qqz5133/nf-merge/link-test/data/Mouse-Fibroblast.umi.txt
+  automatic: no
+  BarcodeBinning: 1
+  nReadsperCell: 100
+  demultiplex: yes
+counting_opts:
+  introns: yes
+  downsampling: '0'
+  strand: 0
+  Ham_Dist: 1
+  write_ham: yes
+  velocyto: no
+  primaryHit: yes
+  twoPass: no
+make_stats: yes
+which_Stage: Filtering
