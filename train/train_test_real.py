@@ -19,20 +19,19 @@ import math
 import os
 
 # Constants
-## Replace '/path/to/work/dir/' to beaver-test working directory
 BEAVER = 'beaver-test'
-HUMAN_DIR = '/path/to/work/dir/results/HEK293T_results/'
+HUMAN_DIR = '../results/HEK293T_results/'
 HUMAN_BEAVER_DIR = HUMAN_DIR + BEAVER
 HUMAN_SAMPLE_SIZE_LIST = [2, 5, 10, 20, 30, 50, 80, 100, 150, 192]
 #HUMAN_SAMPLE_SIZE_LIST = [2]
-MOUSE_DIR = '/path/to/work/dir/results/Mouse-Fibroblast_results/'
+MOUSE_DIR = '../results/Mouse-Fibroblast_results/'
 MOUSE_BEAVER_DIR = MOUSE_DIR + BEAVER
 MOUSE_SAMPLE_SIZE_LIST = [2, 5, 10, 30, 50, 80, 100, 150, 200, 300, 369]
 #MOUSE_SAMPLE_SIZE_LIST = [2]
 
 THRESHOLD = 0.5
-TRAIN_BASE_DIR = f'/path/to/work/dir/train'
-TRAIN_DIR = f'{TRAIN_BASE_DIR}/realDataset-{BEAVER}-meta+specific-final'
+TRAIN_BASE_DIR = f'../train'
+TRAIN_DIR = f'{TRAIN_BASE_DIR}/realDataset-{BEAVER}'
 TRAIN_CHRM = ['1','2','3','4','5','6','7','8','9']
 os.makedirs(TRAIN_DIR, exist_ok=True)
 
@@ -49,8 +48,7 @@ def process_tmap_files_other_chrs_noSpecificGT(tool, sample_size, base_dir, spec
         'psiclass': lambda cell_id: f"{base_dir}/psiclass/merge_{sample_size}/cov_1/individual.{cell_id}.other.psiclass_sample_{cell_id}.otherchrm.gtf.tmap",
         'aletsch': lambda cell_id: f"{base_dir}/aletsch/merge_{sample_size}/gtf/{cell_id}.other.{cell_id}.otherchrm.gtf.tmap",
         'stringtie2': lambda cell_id: f"{base_dir}/stringtie2/{cell_id}.other.{cell_id}.otherchrm.gtf.tmap",
-        'scallop2': lambda cell_id: f"{base_dir}/scallop2/{cell_id}.other.{cell_id}.otherchrm.gtf.tmap",
-        #'aletsch-link': lambda cell_id: f"{base_dir}/aletsch-link/merge_{sample_size}/linkmerge_{sample_size}_sgtf/individual.{cell_id}.{cell_id}.gtf.tmap"
+        'scallop2': lambda cell_id: f"{base_dir}/scallop2/{cell_id}.other.{cell_id}.otherchrm.gtf.tmap"
     }
     
     path_function = tool_paths.get(tool)
@@ -382,7 +380,7 @@ def train_and_evaluate_meta_model(X_train, y_train, X_test, y_test, model_name):
     print(f'Test ROC curve (area = {test_roc_auc:.3f})')
     
     # Save the model
-    model_filename = f'/path/to/work/dir/models/{model_name}_roc={test_roc_auc:.3f}.joblib'
+    model_filename = f'../models/{model_name}_roc={test_roc_auc:.3f}.joblib'
     joblib.dump(model, model_filename)
     
     return model, model_filename, y_prob, y_train_prob
@@ -861,7 +859,7 @@ def train_and_evaluate_specific_model(X_train, y_train, X_test, y_test, model_na
     print(f'Test ROC curve (area = {test_roc_auc:.3f})')
     
     # Save the model
-    model_filename = f'/path/to/work/dir/models/{model_name}_roc={test_roc_auc:.3f}.joblib'
+    model_filename = f'../models/{model_name}_roc={test_roc_auc:.3f}.joblib'
     joblib.dump(model, model_filename)
     
     return model, model_filename, y_prob

@@ -21,8 +21,8 @@ transmeta=$dir/../programs/TransMeta/TransMeta
 psiclass=$dir/../programs/psiclass/psiclass
 gffcompare=$dir/../programs/gffcompare
 gtfcuff=$dir/../programs/gtfcuff
-lmversion=8
-linkmerge=$dir/../programs/scAletsch-${lmversion}
+lmversion=0
+beaver=$dir/../programs/beaver-${lmversion}
 scallop2=$dir/../programs/scallop2
 stringtie2=$dir/../programs/stringtie2
 
@@ -332,12 +332,12 @@ if [ "A" == "B" ];then
         echo "Finish Aletsch scoring."
 fi
 
-# Aletsch-link
+# beaver
 if [ "A" == "A" ];then
         echo "Running altesch - Link..."
 
-        sgtf=$result/aletsch-link-${lmversion}/raw-assemblies
-        cur=$result/aletsch-link-${lmversion}
+        sgtf=$result/beaver-${lmversion}/raw-assemblies
+        cur=$result/beaver-${lmversion}
         mkdir -p $cur
         cd $cur
 
@@ -363,12 +363,12 @@ if [ "A" == "A" ];then
 
                 script=$cur/$num.sh
                 rm -rf $script
-                echo "$linkmerge $list $cur/merge_$num/linkmerge_$num > $cur/merge_$num/merge_$num.log" > $script
-                echo "$gffcompare -M -N -r $ref -o $cur/merge_$num/merge_${num}.stats $cur/merge_$num/linkmerge_$num.gtf" >> $script
-                #echo "$gtfcuff roc $cur/merge_$num/merge_${num}.linkmerge_$num.gtf.tmap 225036 cov > $cur/merge_$num/linkmerge_$num.roc.txt" >> $script
+                echo "$beaver $list $cur/merge_$num/beaver_$num > $cur/merge_$num/merge_$num.log" > $script
+                echo "$gffcompare -M -N -r $ref -o $cur/merge_$num/merge_${num}.stats $cur/merge_$num/beaver_$num.gtf" >> $script
+                #echo "$gtfcuff roc $cur/merge_$num/merge_${num}.beaver_$num.gtf.tmap 225036 cov > $cur/merge_$num/beaver_$num.roc.txt" >> $script
 		
 		# gffcompare individual-level
-                lmsgtf=$cur/merge_$num/linkmerge_${num}_sgtf
+                lmsgtf=$cur/merge_$num/beaver_${num}_sgtf
                 mkdir -p $lmsgtf
                 cd $lmsgtf
                 rm -rf gff-scripts
@@ -376,7 +376,7 @@ if [ "A" == "A" ];then
                 do
                         jscript=$lmsgtf/$j.sh
                         echo "$gffcompare -M -N -r $ref -o $lmsgtf/individual.${j}.stats $lmsgtf/$j.gtf" > $jscript
-                        #echo "$gtfcuff roc $cur/merge_$num/linkmerge_${num}_sgtf/individual.${j}.$j.gtf.tmap 225036 cov > $cur/merge_$num/linkmerge_${num}_sgtf/individual.${j}.roc.txt" >> $script
+                        #echo "$gtfcuff roc $cur/merge_$num/beaver_${num}_sgtf/individual.${j}.$j.gtf.tmap 225036 cov > $cur/merge_$num/beaver_${num}_sgtf/individual.${j}.roc.txt" >> $script
                         echo "awk '\$1 !~ /^(1|2|3|4|5|6|7|8|9)$/' $lmsgtf/$j.gtf > $lmsgtf/$j.otherchrm.gtf" >> $jscript
                         echo "$gffcompare -M -N -r $ref -o $lmsgtf/$j.other.stats $lmsgtf/$j.otherchrm.gtf" >> $jscript
                         echo "$jscript" >> $lmsgtf/gff-scripts   

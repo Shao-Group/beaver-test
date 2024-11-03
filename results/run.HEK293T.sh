@@ -5,8 +5,8 @@ index=$dir/../data/HEK293T_index
 ref=/data/shared/data/ensembl/release-107/Homo_sapiens.GRCh38.107.gtf
 scallop2=$dir/../programs/scallop2
 stringtie2=$dir/../programs/stringtie2
-lmversion=8
-linkmerge=$dir/../programs/scAletsch-${lmversion}
+lmversion=0
+beaver=$dir/../programs/beaver-${lmversion}
 transmeta=$dir/../programs/TransMeta/TransMeta
 psiclass=$dir/../programs/psiclass/psiclass
 gffcompare=$dir/../programs/gffcompare
@@ -39,10 +39,10 @@ if [ "A" == "B" ];then
                 exit 1
         fi
 
-        if [ -e $linkmerge ];then
-                echo -e "Tool Linkmerge found successfully!"
+        if [ -e $beaver ];then
+                echo -e "Tool beaver found successfully!"
         else
-                echo -e "Tool Linkmerge not found in directory 'programs'.\nPlease follow the instructions in 'Step 1: Download and Link Tools' to properly download and link all necessary tools to the directory 'programs'."
+                echo -e "Tool beaver not found in directory 'programs'.\nPlease follow the instructions in 'Step 1: Download and Link Tools' to properly download and link all necessary tools to the directory 'programs'."
                 echo -e "\nNote: Tools are not downloaded automatically. Users need to download and/or compile all required tools, and then link them to 'programs' directory before running experiments.\n"
                 exit 1
         fi
@@ -310,12 +310,12 @@ if [ "A" == "B" ];then
         echo "Finish Aletsch scoring."
 fi
 
-# Aletsch-link
+# beaver
 if [ "A" == "A" ];then
         echo "Running altesch - Link..."
 
-        sgtf=$result/aletsch-link-${lmversion}/raw-assemblies
-        cur=$result/aletsch-link-${lmversion}
+        sgtf=$result/beaver-${lmversion}/raw-assemblies
+        cur=$result/beaver-${lmversion}
         mkdir -p $cur
         cd $cur
 
@@ -341,12 +341,12 @@ if [ "A" == "A" ];then
 
                 script=$cur/$num.sh
                 rm -rf $script
-                echo "$linkmerge $list $cur/merge_$num/linkmerge_$num > $cur/merge_$num/merge_$num.log" > $script
-                echo "$gffcompare -M -N -r $ref -o $cur/merge_$num/merge_${num}.stats $cur/merge_$num/linkmerge_$num.gtf" >> $script
-                #echo "$gtfcuff roc $cur/merge_$num/merge_${num}.linkmerge_$num.gtf.tmap 225036 cov > $cur/merge_$num/linkmerge_$num.roc.txt" >> $script
+                echo "$beaver $list $cur/merge_$num/beaver_$num > $cur/merge_$num/merge_$num.log" > $script
+                echo "$gffcompare -M -N -r $ref -o $cur/merge_$num/merge_${num}.stats $cur/merge_$num/beaver_$num.gtf" >> $script
+                #echo "$gtfcuff roc $cur/merge_$num/merge_${num}.beaver_$num.gtf.tmap 225036 cov > $cur/merge_$num/beaver_$num.roc.txt" >> $script
 		
 		# gffcompare individual-level
-                lmsgtf=$cur/merge_$num/linkmerge_${num}_sgtf
+                lmsgtf=$cur/merge_$num/beaver_${num}_sgtf
                 mkdir -p $lmsgtf
                 cd $lmsgtf
                 rm -rf gff-scripts
@@ -354,7 +354,7 @@ if [ "A" == "A" ];then
                 do
                         jscript=$lmsgtf/$j.sh
                         echo "$gffcompare -M -N -r $ref -o $lmsgtf/individual.${j}.stats $lmsgtf/$j.gtf" > $jscript
-                        #echo "$gtfcuff roc $cur/merge_$num/linkmerge_${num}_sgtf/individual.${j}.$j.gtf.tmap 225036 cov > $cur/merge_$num/linkmerge_${num}_sgtf/individual.${j}.roc.txt" >> $script
+                        #echo "$gtfcuff roc $cur/merge_$num/beaver_${num}_sgtf/individual.${j}.$j.gtf.tmap 225036 cov > $cur/merge_$num/beaver_${num}_sgtf/individual.${j}.roc.txt" >> $script
                         echo "awk '\$1 !~ /^(1|2|3|4|5|6|7|8|9)$/' $lmsgtf/$j.gtf > $lmsgtf/$j.otherchrm.gtf" >> $jscript
                         echo "$gffcompare -M -N -r $ref -o $lmsgtf/$j.other.stats $lmsgtf/$j.otherchrm.gtf" >> $jscript
                         echo "$jscript" >> $lmsgtf/gff-scripts   
@@ -424,26 +424,26 @@ if [ "A" == "B" ];then
         cat $joblist | xargs -L 1 -I CMD -P 20 bash -c CMD 1> /dev/null 2> /dev/null &
 fi
 
-# copy aletsch-link results
+# copy beaver results
 if [ "A" == "B" ];then
-        cur=$result/aletsch-link
+        cur=$result/beaver
 
-        rm -rf $result/cp/aletsch-link
-        mkdir -p $result/cp/aletsch-link
+        rm -rf $result/cp/beaver
+        mkdir -p $result/cp/beaver
 
         for num in $testlist;
         do
                 # from gtf -> tlist, chrm and tid
-                mkdir -p $result/cp/aletsch-link/merge_$num
+                mkdir -p $result/cp/beaver/merge_$num
 
-                awk '{print $2, $3, $5}' $cur/merge_$num/merge_$num.linkmerge_$num.gtf.tmap > $result/cp/aletsch-link/merge_$num/merge_$num.linkmerge_$num.gtf.tmap
-                cp $cur/merge_$num/*.csv $result/cp/aletsch-link/merge_$num
+                awk '{print $2, $3, $5}' $cur/merge_$num/merge_$num.beaver_$num.gtf.tmap > $result/cp/beaver/merge_$num/merge_$num.beaver_$num.gtf.tmap
+                cp $cur/merge_$num/*.csv $result/cp/beaver/merge_$num
 
                 for ((j=1;j<=$num;j++))
                 do
-                        awk '{print $1, $12}' $cur/merge_$num/linkmerge_${num}_sgtf/$j.gtf > $result/cp/aletsch-link/merge_$num/$j.tlist
-                        sed -i 's/[";]//g' $result/cp/aletsch-link/merge_$num/$j.tlist
-                        awk '{print $2, $3, $5}' $cur/merge_$num/linkmerge_${num}_sgtf/individual.$j.$j.gtf.tmap > $result/cp/aletsch-link/merge_$num/$j.tmap
+                        awk '{print $1, $12}' $cur/merge_$num/beaver_${num}_sgtf/$j.gtf > $result/cp/beaver/merge_$num/$j.tlist
+                        sed -i 's/[";]//g' $result/cp/beaver/merge_$num/$j.tlist
+                        awk '{print $2, $3, $5}' $cur/merge_$num/beaver_${num}_sgtf/individual.$j.$j.gtf.tmap > $result/cp/beaver/merge_$num/$j.tmap
 
                 done
         done
