@@ -25,7 +25,7 @@ Our experiments involve the following tools:
 
 #### Step 1.2: Link or Copy Executables
 
-- For tools with available executable files, link or copy them to the `programs` directory. This includes `beaver`, `aletsch`, `scallop2`, `stringtie`, `STAR`, `gffcompare`, and `gtfcuff`.
+- For tools with available executable files, link or copy them to the `programs` directory. This includes `beaver`, `aletsch`, `scallop2`, `stringtie`, `STAR` and `gffcompare`.
 - For tools without standalone executables (TransMeta and PsiCLASS), link the entire directory to `programs`.
 
 Ensure the tools are accessible via the following paths:
